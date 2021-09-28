@@ -10,9 +10,37 @@
 using namespace aed;
 using namespace std;
 
+template<typename T> 
+T getSum(vector<T> a){
+  auto acum = *a.begin();
+  if(!a.empty()){
+    for(auto x = a.begin(); x != a.end(); ++x)
+      acum+= *x;
+  }
+  return 0;
+}
+
 list<vector<int>> Pareto(list<vector<int>>&L){
-  // COMPLETAR AQUI...
-  return list<vector<int>>();
+  auto it = L.begin();
+  auto aux = *L.begin();
+  list<vector<int>> rtrn;
+  
+  while(it != L.end()){
+    auto it2 = L.begin();
+    bool add = true;
+    while (it2 != L.end())
+    {
+      if (getSum(*it)>getSum(*it2))
+      {
+        add = false;
+      }
+      ++it2;
+    }
+    if(add)
+                        rtrn.push_back(*it);
+    ++it;
+  }
+  return rtrn;
 }
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
@@ -34,6 +62,7 @@ bool is_balanced(string &expr) {
                  (*it == '(' && S.top() == '{')){
                     S.pop();
                 }
+        ++it;
     }
     if(S.empty()){
         return true;
