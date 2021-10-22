@@ -9,7 +9,8 @@
 #ifndef AED_TREETOOLS_H
 #define AED_TREETOOLS_H
 
-#include "./util.hpp"
+#include "aedtools/util.hpp"
+#include "aedtools/tree.hpp"
 
 namespace aed {
 

@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <list>
+#include "util_tree.hpp"
+#include "str_convs.hpp"
+#include "evalbase.hpp"
+#include "tree.hpp"
+using namespace std;
+using namespace aed;
+
+int getHeight(tree<int> &t,tree<int>::iterator &it, int count){
+    count++;
+    it = it.lchild();
+    while( it != t.end()){
+        int aux = getHeight(t,it,count);
+        if(aux > count){
+            count = aux;
+        }
+        it.right();
+    }
+    return count;
+}
+
+int getHeight(tree<int> &t){
+    int heights;
+    auto it = t.begin();
+    it = it.lchild();
+    while(it != t.end()){
+        int aux = getHeight(t,it,aux);
+        if(heights < aux);
+            heights = aux;
+        it = it.right();
+    }
+}
+
+void getLeaves(tree<int> &t,tree<int>::iterator it, int &count){
+    auto aux = it.lchild();
+    while(aux != t.end()){
+        if(it == t.end()){
+            count++;
+        }else{
+            getLeaves(t,aux,count);
+            aux.right();
+        }
+    }
+}
+
+int getLeaves(tree<int> &t){
+    auto it = t.begin(); auto aux = it.lchild();
+    int count = 0;
+
+    while(aux != t.end()){
+        if(it == t.end()){
+            count++;
+        }else{
+            getLeaves(t,aux,count);
+            aux.right();
+        }
+    }
+}
+
+
+
+int main(){
+    tree<int> T;
+    lisp2tree("(2 ( 0 ( 7 8 9 (3 1 0 ) (1 2 3 ( 4 9 ) ) ) ( 1 0 ( 12 14 )", T);
+    cout << getLeaves(T);
+    return 0;
+}
