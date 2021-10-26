@@ -1,7 +1,11 @@
 #include <iostream>
-#include <list>
+#include <version>
 #include <map>
-#include "aedtools/tree.hpp"
+#include <list>
+#include "tree.hpp"
+#include "str_convs.hpp"
+#include "util_tree.hpp"
+//#include "str_convs.hpp"
 using namespace aed;
 using namespace std;
 
@@ -9,6 +13,7 @@ using namespace std;
 ListarAOO. Escribir procedimientos para listar un  ́arbol 
 ordenado orientado siguiendo los  ́ordenesprefijo y postfijo.
 */
+
 void preorder(tree<int> &t, list<int> &l,tree<int>::iterator &it){
     l.insert(l.end(),*it);
     auto c = it.lchild();
@@ -28,13 +33,12 @@ void preorder(tree<int> &t, list<int> &l){
 }
 
 void posorder(tree<int> &t, list<int> &l,tree<int>::iterator it){
-    l.insert(l.end(),*it);
     auto c = it.lchild();
     while(c!=t.end()){
-        preorder(t,l,c);
+        posorder(t,l,c);
         c = c.right();
     }
-    l.insert(l.end(),*c);    
+    l.insert(l.end(),*it);    
 }
 
 void posorder(tree<int> &t, list<int> &l){
@@ -43,13 +47,20 @@ void posorder(tree<int> &t, list<int> &l){
         l.push_back(*it);
         return;
     }
-    preorder(t,l,it);
+    posorder(t,l,it);
 }
 
+//preorder funciona bien, pos  order no funciona
+
 int main(){
-    tree<int> a;
+    tree<int> t;
+    make_random_tree(t,10,2);
+    list<int> pre;
+    posorder(t,pre);
+    print_tree(t);
+    for(auto x : pre){
+        cout << x << " ";
+    }
     
-
-
     return 0;
 }
