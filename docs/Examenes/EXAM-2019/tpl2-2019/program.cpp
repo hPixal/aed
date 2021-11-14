@@ -10,8 +10,29 @@
 using namespace aed;
 using namespace std;
 
-void fill_ordprev(tree<int> &T,list<int> &L) {
-  // COMPLETAR AQUI...
+void fill_ordprev(tree<int> &tr,tree<int>::iterator pos,
+                  list<int> &l, list<int>::iterator &it){
+    if(pos == tr.end()) return;
+
+    auto child = pos.lchild();
+    while(child != tr.end()){
+        *child = *it; it++;
+
+        if(it != l.end()){ 
+            fill_ordprev(tr,child,l,it);
+            if(it == l.end()) break;
+        }
+        
+        child++;
+    }
+}
+
+
+
+void fill_ordprev(tree<int> &tr,list<int> &l){
+    auto pos = tr.begin(); *pos = *l.begin();
+    auto beg = ++l.begin();
+    fill_ordprev(tr,tr.begin(),l,beg);
 }
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>

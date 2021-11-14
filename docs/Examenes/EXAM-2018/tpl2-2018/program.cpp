@@ -10,10 +10,32 @@ using namespace aed;
 using namespace std;
 typedef map<string,list<string>> mapsl;
 
-void classify_relative(tree<int> &T,
-                       int n1,int n2,int &m1, int&m2) {
-  // COMPLETAR AQUI....
+
+
+bool getPath(tree<int> &tr,tree<int>::iterator pos,int &n,int count,int &rtrn){
+    if (pos == tr.end()) return false;
+
+    auto child = pos.lchild();
+    bool found = false;
+    int count2 = count + 1;
+
+
+    while(child != tr.end() || found){
+
+        if(*child == n)
+        { found = true; rtrn = count; } 
+
+        found = getPath(tr,child++,n,count2,rtrn);
+    }
+    return found;
 }
+
+void classify_relative(tree<int> &tr,int n1,int n2,int &m1, int&m2) {
+    m1 = -1; m2 = -1;
+    getPath(tr,tr.begin(),n1,1,m1);
+    getPath(tr,tr.begin(),n2,1,m2);
+}
+
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
 void prom_path(tree<int> &tr,tree<int>::iterator pos, int count,vector<int> &allPaths){
