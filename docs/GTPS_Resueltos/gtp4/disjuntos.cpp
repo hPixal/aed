@@ -40,8 +40,7 @@ template<typename T>
     bool disjuntos(vector<set<T>>&v){
         auto itv = v.begin();
         auto itv2 = v.begin();
-        
-        advance(itv,2);
+        //);
         while (itv2 != v.end())
         {   
             if(set_intersection(*itv,*itv2).size() != 0){

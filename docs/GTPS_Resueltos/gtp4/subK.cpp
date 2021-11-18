@@ -3,9 +3,10 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <set>
 //#include "tree.hpp"
 #include "btree.hpp"
-//#include "util_tree.hpp"
+//#include "util_btree.hpp"
 //#include "str_convs.hpp"
 using namespace aed;
 using namespace std;
@@ -21,53 +22,29 @@ using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////
 
-bool isThere(const list<char> &l, const char &value){
-    for(auto x : l){
-        if(x == value) return true;
-    }
-    return false;
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-list<char> getProbList(const map<char,float> &A){
-    list<char> probList;
-    auto add = A.begin();
-    while(probList.size() != A.size()){
-        auto it = A.begin(); 
-        while(it != A.end()){
-            if(add->second > it->second && !isThere(probList,it->first)){
-                add = it;
-            }
-        }
-    }
-
-    return probList;
-}
-
-////////////////////////////////////////////////////////////////////////////
-
-void make_huffman_tree(btree<char> &huff,list<char> &prob,btree<char>::iterator add,list<char>::iterator lit)
-{
-    if(lit == prob.end()) return;
-    add = huff.insert(add,*lit);
-
-    btree<char>::iterator nextr = add.right();
-    btree<char>::iterator nextl = add.left();
+list<set<int>> subk(set<int> &S, int k){
+    list<set<int>> rtrn;
     
-    make_huffman_tree(huff,prob,nextr,lit++);
-    make_huffman_tree(huff,prob,nextl,lit++);
-}
+    auto it = S.begin();
+    set<int> aux;
+    while (it != S.end())
+    {
+        for (int i = 0; i < k; i++)
+        {
+            if(it == S.end()){
+                for(auto x : aux){
+                    rtrn.begin()->insert(x); 
+                }
+                return rtrn;
+            }
 
-////////////////////////////////////////////////////////////////////////////
-
-
-btree<char> make_huffman_tree(map<char,float> &A){
-    auto prob = getProbList(A);
-    btree<char> huff;
-    make_huffman_tree(huff,prob,huff.begin(),prob.begin());
-
-    return huff;
+            aux.insert(*it);
+            it++;
+        }
+        rtrn.push_back(aux);
+        aux.clear();
+    }
+    return rtrn;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -85,15 +62,44 @@ void create_btree(btree<int> &tr,btree<int>::iterator it,int level,int count){
     create_btree(tr,nextl,level,count+1);
 }
 
+
 void create_btree(btree<int> &tr,int level){
     tr.clear();
     create_btree(tr,tr.begin(),level,0);
 }
 
-int main(){
-    btree<int> tr; btree<int> tr2;
-    create_btree(tr,3); create_btree(tr2,4);
+////////////////////////////////////////////////////////////////////////////
+/*Extra: crear un set aleatorio */
+////////////////////////////////////////////////////////////////////////////
 
+set<int> create_set(int elem){
+    set<int> rtrn;
+    while ( int(rtrn.size()) != elem)
+    {
+        int aux = rand() % (elem+100);
+        if (rtrn.find(aux) == rtrn.end())
+        {
+            rtrn.insert(aux);
+        }
+    }
+    return rtrn;
+}
+
+int main(){
+    btree<int> example;
+    create_btree(example,2);
+
+    set<int> test = create_set(10);
+    
+    list<set<int>> out = subk(test,2);
+
+    for(list<set<int>>::iterator x = out.begin(); x != out.end(); x++){
+        for(set<int>::iterator y = x->begin() ; y != x->end() ; y++){
+            cout << *y << endl;
+        }
+        cout << endl;
+    }
+    
 
     // if(balanced(tr)) cout << "funciona" << endl;
     return 0;
