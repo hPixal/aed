@@ -1,8 +1,8 @@
 // GITVERSION: tpl2-2019-52-g9b8020c4
 #ifndef EVAL_HPP
 #define EVAL_HPP
-#include "aedtools/evalbase.hpp"
-#include "aedtools/str_convs.hpp"
+#include "evalbase.hpp"
+#include "str_convs.hpp"
 #include <forward_list>
 #include <sstream>
 #include <algorithm>

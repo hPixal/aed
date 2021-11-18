@@ -1,0 +1,10 @@
+== Como hacer la clase evaluadora HOWTO
+
+* Para cada ejercicio hay que derivar la clase `eval_base_t` e   instanciar los métodos `run_case()`, `check_case()`, y `generate_case()`. 
+
+* La función run_case toma como entrada un `Json::Value data`,  extrae los
+  contenedores necesarios, aplica la función a evaluar  y devuelve los
+  resultados en un `Json::Value OUTUSER`
+
+* La función `check_case()` dada la salida del usuario `outuser` y la de referencia `outref` determina si el examen fue correcto o no. Normalmente bastaría con compararlos ambos, ya que `Json::Value` tiene operador de comparación. Pero en algunos casos puede fallar, por ejemplo si la salida no es determinística, por ejemplo una lista en la cual los elementos pueden no estar ordenados. Entonces podríamos ordenar primero las listas y después compararlas. Por si fuese necesario la función recibe los datos de entrada al problema `datain`, que tal vez pueden servir para la comparación. USualmente no se usan.
+

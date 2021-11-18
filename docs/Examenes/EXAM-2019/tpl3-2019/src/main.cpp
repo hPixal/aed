@@ -10,9 +10,23 @@
 using namespace aed;
 using namespace std;
 
-int spaceship(btree<int> &T1,btree<int> &T2) {
-  // COMPLETAR AQUI...
+int spaceship(btree<int> &T1,btree<int>::iterator it1,btree<int> &T2,btree<int>::iterator it2) {
+  if (it1==T1.end() && it2==T2.end()) return 0;
+  if (it1==T1.end() && it2!=T2.end()) return -1;
+  if (it1!=T1.end() && it2==T2.end()) return +1;
+
+  int rv;
+  rv = *it1-*it2; if (rv) return rv;
+  rv = spaceship(T1,it1.left(),T2,it2.left()); if (rv) return rv;
+  rv = spaceship(T1,it1.right(),T2,it2.right()); if (rv) return rv;
+
   return 0;
+}
+
+
+int spaceship(btree<int> &T1,btree<int> &T2) {
+  int rv = spaceship(T1,T1.begin(),T2,T2.begin());
+  return rv>0? 1 : rv<0? -1 : 0;
 }
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
@@ -32,8 +46,31 @@ list<pair<btree<char>,float>>::iterator getMin(list<pair<btree<char>,float>> & b
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
 btree<char> makeHuffmanTree(list<pair<btree<char>,float>> & bosque){
-  // COMPLETAR AQUI...
-  return btree<char>();
+  while(bosque.size()>1){
+  auto it = getMin(bosque);
+
+  btree<char> Tl;
+  auto aux1 = it->first.begin();
+  Tl.splice(Tl.begin(),aux1);
+  int w = it->second;
+  bosque.erase(it);  
+
+  it = getMin(bosque);
+  btree<char> Tr;
+  auto aux2 = it->first.begin();
+  Tr.splice(Tr.begin(),aux2);
+  w += it->second;
+  bosque.erase(it);  
+
+  btree<char> Tnew; Tnew.insert(Tnew.begin(),'.');
+   aux1 = Tl.begin();
+   Tnew.splice(Tnew.begin().left(),aux1);
+   aux2 = Tr.begin();
+   Tnew.splice(Tnew.begin().right(),aux2);
+  
+   bosque.push_back({Tnew,w});
+   }
+  return bosque.begin()->first;
 }
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>

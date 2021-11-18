@@ -1,12 +1,23 @@
-# -*- mode: makefile -*-
-## GITVERSION: tpl2-2019-52-g9b8020c4
-CPP := util_btree.cpp,util.cpp,util_tree.cpp
-HPP := eval.hpp util.hpp util_tree.hpp tree.hpp util_btree.hpp 
-SRCS := $(CPP) $(HPP)
-.PHONY: force
-program.bin: force
-	g++ -I. -std=gnu++11 -g3 -O0 -o $@ program.cpp aedtools/{$(CPP)}
+CXX		  := g++
+CXX_FLAGS := -Wall -Wextra -std=c++17 -ggdb
 
-check:
-	$(MAKE) program.bin
-	./program.bin
+BIN		:= bin
+SRC		:= src
+INCLUDE	:= include
+LIB		:= lib
+
+LIBRARIES	:=
+EXECUTABLE	:= main
+
+
+all: $(BIN)/$(EXECUTABLE)
+
+run: clean all
+	clear
+	./$(BIN)/$(EXECUTABLE)
+
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
+	$(CXX) $(CXX_FLAGS) -isystem $(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+
+clean:
+	-rm $(BIN)/*

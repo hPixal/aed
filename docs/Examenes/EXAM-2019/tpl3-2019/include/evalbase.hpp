@@ -19,11 +19,11 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
-#include "aedtools/json.hpp"
-#include "aedtools/tree.hpp"
-#include "aedtools/util_tree.hpp"
-#include "aedtools/btree.hpp"
-#include "aedtools/util_btree.hpp"
+#include "json.hpp"
+#include "tree.hpp"
+#include "util_tree.hpp"
+#include "btree.hpp"
+#include "util_btree.hpp"
 #ifdef HAVE_MPI
 #include <mpi.h>
 #endif
