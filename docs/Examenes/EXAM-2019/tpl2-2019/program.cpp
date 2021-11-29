@@ -10,38 +10,55 @@
 using namespace aed;
 using namespace std;
 
-void fill_ordprev(tree<int> &tr,tree<int>::iterator pos,
-                  list<int> &l, list<int>::iterator &it){
-    if(pos == tr.end()) return;
-
-    auto child = pos.lchild();
-    while(child != tr.end()){
-        *child = *it; it++;
-
-        if(it != l.end()){ 
-            fill_ordprev(tr,child,l,it);
-            if(it == l.end()) break;
-        }
-        
-        child++;
-    }
+void fill_ordprev(tree<int> &tr,tree<int>::iterator pos, list<int> &l, 
+                  list<int>::iterator &lit)
+{
+  if (lit == l.end() || pos == tr.end()){ return; } 
+  *pos = *lit; pos = pos.lchild();
+  
+  while(pos!= tr.end() && lit != l.end()){
+    lit++;
+    fill_ordprev(tr,pos,l,lit);
+    pos = pos.right(); 
+  }
 }
-
 
 
 void fill_ordprev(tree<int> &tr,list<int> &l){
-    auto pos = tr.begin(); *pos = *l.begin();
-    auto beg = ++l.begin();
-    fill_ordprev(tr,tr.begin(),l,beg);
+  if(l.empty()) return;
+  auto it = tr.begin(); auto lit = l.begin();
+  fill_ordprev(tr,it,l,lit);
+}
+//---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
+
+  tree<char>::iterator a_lo_ancho(graph& G,graph::iterator itg, tree<char>& tr, tree<char>::iterator itr,map<char,bool> &added){
+  if(added.find(itg->first) != added.end()) return itr;
+  if(itg == G.end()) return tr.end();
+  
+  itr = tr.insert(itr,itg->first);
+  added[itg->first] = true;
+
+  auto child = itr.lchild();
+  
+  for( auto itv = itg->second.begin(); itv != itg->second.end(); itv++ ){
+    auto aux = G.find(*itv);
+    if(aux != G.end()){
+      auto compare = a_lo_ancho(G,aux,tr,child,added);
+        if(compare == tr.end()) return tr.end();
+        if(compare != child) {child = compare; child++; }
+    }
+  }
+  return child;
 }
 
-//---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
-void a_lo_ancho(graph& G, tree<char>& T){
-  // COMPLETAR AQUI...
+void a_lo_ancho(graph& G, tree<char>& tr){
+  if(G.empty()) return; map<char,bool> added;
+  auto itg = G.begin(); auto itr = tr.begin();
+  a_lo_ancho(G,itg,tr,itr,added);
 }
 
 void intersect_map(map<int,list<int>> &A, map<int,list<int>> &B,map<int,list<int>> &C){
-  // COMPLETAR AQUI...
+  
 }
 
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
@@ -61,8 +78,8 @@ int main() {
     ev.eval<2>(a_lo_ancho,vrbs);
     h2 = ev.evalr<2>(a_lo_ancho,seed,vrbs);
     
-    ev.eval<3>(intersect_map,vrbs);
-    h3 = ev.evalr<3>(intersect_map,seed,vrbs);
+    //ev.eval<3>(intersect_map,vrbs);
+    //h3 = ev.evalr<3>(intersect_map,seed,vrbs);
     
     printf("S=%03d -> H1=%03d H2=%03d H3=%03d\n",
            seed,h1,h2,h3);

@@ -11,7 +11,75 @@ using namespace std;
 typedef map<string,list<string>> mapsl;
 
 
+list<int> findPath(tree<int> &tr, tree<int>::iterator it ,int &num,list<int> rtn, bool &found) 
+{
+    if(it == tr.end() || found) return rtn; 
+    rtn.push_back(*it);
 
+    if(*it == num){
+        found = true; return rtn; 
+    } 
+
+    it = it.lchild();
+
+    while (it!=tr.end())
+    {
+        rtn = findPath(tr,it,num,rtn,found);
+        it = it.right();
+    }
+
+    if(!found)rtn.pop_back();
+    return rtn;
+}
+
+list<int> findPath(tree<int> &tr, int num) 
+{
+    list<int> rtn;
+    if(*tr.begin() == num ){ rtn.push_back(*tr.begin()); return rtn; }
+    if(tr.empty()) return rtn; bool found = false;
+    rtn=findPath(tr,tr.begin(),num,rtn,found);
+    if(found) return rtn;
+    rtn.clear();
+    return rtn;
+}
+
+pair<int,int> getProximity(list<int> &l1, list<int> &l2){
+    bool startCount = 0; int count = 0;
+    int m1 = 0; int m2 = 0;
+    int closest = -999;
+
+    for(auto x : l1){
+        for(auto y : l2){
+            if( x == y ){
+                closest = x;
+            }
+        }
+    }
+
+    for(auto x : l1){
+        if(startCount) count++;
+        if(x==closest) startCount = 1;
+    }
+    m1 = count;
+
+    startCount = 0; count = 0;
+    for(auto x : l2){
+        if(startCount) count++;
+        if(x==closest) startCount = 1;
+    }
+    m2 = count;
+
+    return make_pair(m1,m2);
+}
+
+void classify_relative(tree<int> &T,int n1,int n2,int &m1, int&m2){
+    if(n1 == n2){ m1 = 0; m2 = 0; return; }
+    auto l1  = findPath(T,n1); auto l2 = findPath(T,n2);
+    tie(m1,m2) = getProximity(l1,l2);
+}
+
+
+/*
 bool getPath(tree<int> &tr,tree<int>::iterator pos,int &n,int count,int &rtrn){
     if (pos == tr.end()) return false;
 
@@ -30,13 +98,13 @@ bool getPath(tree<int> &tr,tree<int>::iterator pos,int &n,int count,int &rtrn){
     return found;
 }
 
-void classify_relative(tree<int> &tr,int n1,int n2,int &m1, int&m2) {
+void classify_relative(tree<int> &tr,int n1,int n2,int &m1,int &m2){
     m1 = -1; m2 = -1;
     getPath(tr,tr.begin(),n1,1,m1);
     getPath(tr,tr.begin(),n2,1,m2);
 }
 
-
+*/
 //---:---<*>---:---<*>---:---<*>---:---<*>---:---<*>
 void prom_path(tree<int> &tr,tree<int>::iterator pos, int count,vector<int> &allPaths){
     if (pos == tr.end()) return;
@@ -46,9 +114,10 @@ void prom_path(tree<int> &tr,tree<int>::iterator pos, int count,vector<int> &all
     while(child != tr.end()){
 
         if(child.lchild() == tr.end())
-        { allPaths.push_back(count); } 
+        { allPaths.push_back(count+1); } 
 
-        prom_path(tr,child++,count++,allPaths);
+        prom_path(tr,child,count+1,allPaths);
+        child = child.right();
     }
 }
 
@@ -60,11 +129,11 @@ float prom_path(tree<int> &tr){
     float prom = 0;
  
     for(auto x : allPaths){
-        cout << x << endl;
+        //cout << x << endl;
         prom += x;
     }
-
-    return (prom/allPaths.size());
+    if(!allPaths.empty()) prom = prom/int(allPaths.size());
+    return prom;
     
 }
 
